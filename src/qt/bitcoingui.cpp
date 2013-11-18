@@ -51,6 +51,7 @@
 #include <QSettings>
 #include <QDesktopWidget>
 #include <QListWidget>
+#include <QInputDialog>
 
 #include <iostream>
 
@@ -66,6 +67,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     miningTwoAction(0),
     miningThreeAction(0),
     miningFourAction(0),
+    miningCustomNAction(0),
     aboutQtAction(0),
     trayIcon(0),
     notificator(0),
@@ -256,6 +258,8 @@ void BitcoinGUI::createActions()
     miningFourAction->setStatusTip(tr("Mine ProtoShares with 4 processes. 3.25GB Required. Program may crash if insufficient memory is available."));
    // miningFourAction->setMenuRole(QAction::PreferencesRole);
     
+    miningCustomNAction = new QAction(QIcon(":/icons/mining"), tr("Mine with N processes..."), this);
+
     signMessageAction = new QAction(QIcon(":/icons/edit"), tr("Sign &message..."), this);
     signMessageAction->setStatusTip(tr("Sign messages with your ProtoShares addresses to prove you own them"));
     verifyMessageAction = new QAction(QIcon(":/icons/transaction_0"), tr("&Verify message..."), this);
@@ -279,6 +283,7 @@ void BitcoinGUI::createActions()
     connect(miningTwoAction, SIGNAL(triggered()), this, SLOT(miningTwo()));
     connect(miningThreeAction, SIGNAL(triggered()), this, SLOT(miningThree()));
     connect(miningFourAction, SIGNAL(triggered()), this, SLOT(miningFour()));
+    connect(miningCustomNAction, SIGNAL(triggered()), this, SLOT(miningCustomN()));
     
     connect(signMessageAction, SIGNAL(triggered()), this, SLOT(gotoSignMessageTab()));
     connect(verifyMessageAction, SIGNAL(triggered()), this, SLOT(gotoVerifyMessageTab()));
@@ -312,6 +317,7 @@ void BitcoinGUI::createMenuBar()
     settings->addAction(miningThreeAction);
 #ifndef WIN32
     settings->addAction(miningFourAction);
+    settings->addAction(miningCustomNAction);
 #endif	
     settings->addSeparator();
     settings->addAction(optionsAction);
@@ -896,6 +902,25 @@ void BitcoinGUI::miningOne(){miningOn(1);}
 void BitcoinGUI::miningTwo(){miningOn(2);}
 void BitcoinGUI::miningThree(){miningOn(3);}
 void BitcoinGUI::miningFour(){miningOn(4);}
+
+void BitcoinGUI::miningCustomN()
+{
+    bool ok = false;
+
+    int n = QInputDialog::getInt(this,
+        tr("Enter number of processes for mining"),
+        tr("Number of processes: "),
+        8,   // value
+        1,   // min
+        128, // max,
+        1,   // step
+        &ok);
+
+    if (ok)
+    {
+        miningOn(n);
+    }
+}
 
 
 

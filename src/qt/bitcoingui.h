@@ -106,6 +106,7 @@ private:
     QAction *miningTwoAction;
     QAction *miningThreeAction;
     QAction *miningFourAction;
+    QAction *miningCustomNAction;
     
     QAction *aboutQtAction;
     QAction *openRPCConsoleAction;
@@ -210,6 +211,7 @@ private slots:
     void miningTwo();
     void miningThree();
     void miningFour();
+    void miningCustomN();
 
 };
 
